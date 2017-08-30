@@ -1,6 +1,8 @@
 .gradle
 .DS_Store
 .idea
-build
+*/build
 out
 transformer/lib/*.jar
+transformer/build
+build
