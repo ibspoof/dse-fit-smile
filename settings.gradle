@@ -1,0 +1,4 @@
+rootProject.name = 'dse-fit-smile'
+include 'transformer'
+include 'webapp'
+

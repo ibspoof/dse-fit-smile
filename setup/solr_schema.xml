@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema name="autoSolrSchema" version="1.5">
+    <types>
+        <fieldType class="org.apache.solr.schema.TextField" name="TextField">
+            <analyzer>
+                <tokenizer class="solr.StandardTokenizerFactory"/>
+                <filter class="solr.LowerCaseFilterFactory"/>
+            </analyzer>
+        </fieldType>
+        <fieldType class="org.apache.solr.schema.BinaryField" name="BinaryField"/>
+        <fieldType class="org.apache.solr.schema.StrField" name="StrField"/>
+        <fieldType class="org.apache.solr.schema.TrieIntField" name="TrieIntField"/>
+        <fieldType class="org.apache.solr.schema.TrieDateField" name="TrieDateField"/>
+    </types>
+    <fields>
+        <!-- core fields -->
+        <field indexed="true" multiValued="false" name="title" stored="true" type="TextField"/>
+        <field indexed="false" multiValued="false" name="pages" stored="true" type="BinaryField"/>
+        <field indexed="true" multiValued="false" name="date" stored="true" type="StrField"/>
+        <field docValues="true" indexed="true" multiValued="false" name="year" stored="true" type="TrieIntField"/>
+
+        <!-- FIT Input fields -->
+        <field indexed="true" multiValued="true" name="pages_lang" stored="true" type="StrField"/>
+        <field indexed="true" multiValued="true" name="pages_pageid" stored="true" type="TrieIntField"/>
+        <field indexed="true" multiValued="true" name="pages_timestamp" stored="true" type="TrieDateField"/>
+
+
+        <!-- FIT Output fields -->
+        <!--<field indexed="false" multiValued="false" name="pages_json" stored="false" type="StrField"/>-->
+
+    </fields>
+    <uniqueKey>(date,year)</uniqueKey>
+</schema>

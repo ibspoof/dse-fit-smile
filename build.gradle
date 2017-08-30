@@ -1,0 +1,9 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'eclipse'
+}
+
+group = 'com.com.github.ibspoof.dsefit'
+version = '1.0.0'
+sourceCompatibility = 1.8

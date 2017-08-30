@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'eclipse'
+}
+
+group = 'com.com.github.ibspoof.dse'
+version = '1.0.0'
+def name = 'smile-webapp'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.3.RELEASE'
+
+    compile group: 'com.datastax.dse', name: 'dse-java-driver-core', version: '1.4.0'
+    compile group: 'com.datastax.dse', name: 'dse-java-driver-mapping', version: '1.4.0'
+
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-smile', version: '2.9.0'
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
+
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
+//    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
+
+    compile group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
+
+}
+
+
+jar {
+
+    exclude('com/datastax/**')
+
+    from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+
+    manifest {
+        attributes 'Implementation-Title': name,
+                'Implementation-Version': version,
+                'Built-By': System.getProperty('user.name'),
+                'Built-Date': new Date(),
+                'Built-JDK': System.getProperty('java.version'),
+                'Main-Class': 'com.datastax.gatling.stress.Starter'
+    }
+}

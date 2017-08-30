@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'eclipse'
+}
+
+group = 'com.com.github.ibspoof.dse'
+version = '1.0.0'
+def name = 'smile-transformer'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compileOnly fileTree(dir: 'lib', includes: ['*.jar'])
+    compileOnly group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
+
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-smile', version: '2.9.0'
+
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
+
+}
+
+
+jar {
+
+    exclude('com/datastax/**')
+
+    from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+
+    manifest {
+        attributes 'Implementation-Title': name,
+                'Implementation-Version': version,
+                'Built-By': System.getProperty('user.name'),
+                'Built-Date': new Date(),
+                'Built-JDK': System.getProperty('java.version'),
+                'Main-Class': 'com.com.github.ibspoof.dse.transformer.JacksonSmileInputTransformer'
+    }
+}
