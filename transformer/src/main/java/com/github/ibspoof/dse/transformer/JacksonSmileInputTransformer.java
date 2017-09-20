@@ -7,6 +7,7 @@ import com.github.ibspoof.dse.transformer.mappers.SmileMapper;
 import com.github.ibspoof.dse.transformer.pojos.onthisday.Page;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.lucene.document.Document;
+import org.apache.solr.common.SolrException;
 import org.apache.solr.core.SolrCore;
 import org.apache.solr.schema.IndexSchema;
 import org.apache.solr.schema.SchemaField;
@@ -17,6 +18,8 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+
+import static org.apache.solr.common.SolrException.ErrorCode.BAD_REQUEST;
 
 public class JacksonSmileInputTransformer extends FieldInputTransformer {
 
@@ -51,15 +54,21 @@ public class JacksonSmileInputTransformer extends FieldInputTransformer {
 
             for (Page page : pages) {
                 logger.trace("Page parsing: {}", page.getPageid().toString());
-                helper.addFieldToDocument(core, schema, key, doc, pagesLang, page.getLang());
-                helper.addFieldToDocument(core, schema, key, doc, pagesPageId, page.getPageid().toString());
 
-                Long timestamp = Date.from(Instant.parse(page.getTimestamp())).getTime();
-                helper.addFieldToDocument(core, schema, key, doc, pagesTimestamp, timestamp.toString());
+                if (pagesLang != null) {
+                    helper.addFieldToDocument(core, schema, key, doc, pagesLang, page.getLang());
+                }
+                if (pagesPageId != null) {
+                    helper.addFieldToDocument(core, schema, key, doc, pagesPageId, page.getPageid().toString());
+                }
+                if (pagesTimestamp != null) {
+                    Long timestamp = Date.from(Instant.parse(page.getTimestamp())).getTime();
+                    helper.addFieldToDocument(core, schema, key, doc, pagesTimestamp, timestamp.toString());
+                }
             }
 
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new SolrException(BAD_REQUEST, "Unable to process 'pages' field.", ex);
         }
     }
 }
